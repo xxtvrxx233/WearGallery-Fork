@@ -157,7 +157,7 @@ class PreferenceViewModel(
         if (file != null) {
             val uri = FileProvider.getUriForFile(
                 getApplication(),
-                "cc.chenhe.weargallery.fileprovider",
+                getApplication<android.app.Application>().packageName + ".fileprovider",
                 file
             )
             PreferenceUiState.ExportLogState.Prepared(uri)

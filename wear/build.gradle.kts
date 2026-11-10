@@ -1,38 +1,29 @@
-import android.annotation.SuppressLint
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
-    id("kotlin-parcelize")
-    id("kotlin-kapt")
-    id("androidx.navigation.safeargs.kotlin")
-    id("cc.chenhe.weargallery.copy-outs")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.copy.outs)
+    alias(libs.plugins.aboutlibraries)
 }
+
 
 android {
     namespace = "cc.chenhe.weargallery"
-    compileSdk = 33
+    compileSdk = 37
+
     defaultConfig {
-        applicationId = "cc.chenhe.weargallery"
-        minSdk = 21
-        @SuppressLint("ExpiredTargetSdkVersion")
-        // wear os has its own limitation: https://support.google.com/googleplay/android-developer/answer/11926878
-        targetSdk = 30
+        applicationId = "io.github.xxtvrxx233.weargallery"
+        minSdk = 26
+        targetSdk = 37
         versionCode = 220603021 // header(22)+xx.xx.xx+device(0-phone; 1-wear)
         versionName = "v6.3.2"
 
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
+        vectorDrawables.useSupportLibrary = true
 
-        buildConfigField(
-            type = "String",
-            name = "APPCENTER_SECRET",
-            value = "\"${gradleLocalProperties(rootProject.projectDir)["wear.appcenter.secret"] ?: ""}\""
-        )
     }
+
     signingConfigs {
         Signing(rootDir).readConfig()?.also { config ->
             create("release") {
@@ -43,12 +34,17 @@ android {
             }
         }
     }
+
     buildTypes {
+        debug {
+            // Same key as release so debug builds can replace a signed install.
+            signingConfigs.findByName("release")?.also { signingConfig = it }
+        }
         release {
             signingConfigs.findByName("release")?.also { signingConfig = it }
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
@@ -56,74 +52,78 @@ android {
 
     buildFeatures {
         buildConfig = true
-        viewBinding = true
-        dataBinding = true
+        compose = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
     lint {
-        textReport = false
-        xmlReport = false
         disable += "MissingTranslation"
-    }
-    bundle {
-        storeArchive {
-            enable = false
-        }
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+    }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 dependencies {
-    implementation(fileTree("libs") { include("*.jar") })
     implementation(project(":common"))
 
-    implementation("androidx.exifinterface:exifinterface:1.3.5")
-    implementation("androidx.palette:palette:1.0.0")
-    implementation("io.insert-koin:koin-android:3.2.0")
-    implementation("com.google.android.gms:play-services-wearable:18.0.0")
-    implementation("com.google.android.support:wearable:2.9.0")
-    compileOnly("com.google.android.wearable:wearable:2.9.0")
-    implementation("cc.chenhe:watch-face-helper:2.0.3")
-    implementation("com.heinrichreimersoftware:material-intro:2.0.0")
-    implementation("org.nanohttpd:nanohttpd:2.3.1")
-    implementation("com.github.zhpanvip:viewpagerindicator:1.2.1")
+    // Compose for Wear OS
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.androidx.wear.compose.material3)
+    implementation(libs.androidx.wear.compose.foundation)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material.icons.extended)
+    implementation(libs.compose.runtime.livedata)
+    implementation(libs.material.kolor)
+    implementation(libs.aboutlibraries.core)
+
+    implementation(libs.androidx.exifinterface)
+    implementation(libs.androidx.palette)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.google.play.services.wearable)
+    implementation(libs.google.support.wearable)
+    compileOnly(libs.google.wearable.compile.only)
+    implementation(libs.ichenhe.watch.face.helper)
+    implementation(libs.nanohttpd)
+    implementation(libs.google.zxing.core)
+
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.process)
+    implementation(libs.androidx.localbroadcastmanager)
+
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
+
+    implementation(libs.moshi)
+    ksp(libs.moshi.kotlin.codegen)
 
 
-    val nav = rootProject.ext["nav"] as String
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav")
+    implementation(libs.sketch)
+    implementation(libs.sketch.gif)
+    implementation(libs.wearvision)
 
-    val lifecycle = "2.5.1"
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle")
+    implementation(libs.coil)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.compose)
 
-    val room = "2.4.3"
-    implementation("androidx.room:room-ktx:$room")
-    implementation("androidx.room:room-paging:$room")
-    ksp("androidx.room:room-compiler:$room")
-    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-
-    val moshi = rootProject.extra["moshi"] as String
-    implementation("com.squareup.moshi:moshi:$moshi")
-    ksp("com.squareup.moshi:moshi-kotlin-codegen:$moshi")
-
-    val appcenter = "5.0.0"
-    implementation("com.microsoft.appcenter:appcenter-analytics:$appcenter")
-    implementation("com.microsoft.appcenter:appcenter-crashes:$appcenter")
-
-    val sketch = "2.7.1"
-    implementation("me.panpf:sketch:$sketch")
-    implementation("me.panpf:sketch-gif:$sketch")
-    implementation("me.chenhe:wearvision:0.1.1")
-
-    val coil = "2.2.2"
-    implementation("io.coil-kt:coil:$coil")
-    implementation("io.coil-kt:coil-gif:$coil")
-
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("io.strikt:strikt-core:0.33.0")
+    testImplementation(libs.junit)
+    testImplementation(libs.strikt.core)
 }

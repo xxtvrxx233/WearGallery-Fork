@@ -1,22 +1,5 @@
 <data-extraction-rules xmlns:tools="http://schemas.android.com/tools">
     <cloud-backup disableIfNoEncryptionCapabilities="true">
-        <exclude
-            domain="sharedpref"
-            path="AppCenter.xml" />
-        <exclude
-            domain="database"
-            path="com.microsoft.appcenter.persistence" />
-        <exclude
-            domain="database"
-            path="com.microsoft.appcenter.persistence-journal" />
-        <exclude
-            domain="file"
-            path="error"
-            tools:ignore="FullBackupContent" />
-        <exclude
-            domain="file"
-            path="appcenter"
-            tools:ignore="FullBackupContent" />
 
         <exclude
             domain="root"
@@ -27,23 +10,6 @@
     </cloud-backup>
 
     <device-transfer>
-        <exclude
-            domain="sharedpref"
-            path="AppCenter.xml" />
-        <exclude
-            domain="database"
-            path="com.microsoft.appcenter.persistence" />
-        <exclude
-            domain="database"
-            path="com.microsoft.appcenter.persistence-journal" />
-        <exclude
-            domain="file"
-            path="error"
-            tools:ignore="FullBackupContent" />
-        <exclude
-            domain="file"
-            path="appcenter"
-            tools:ignore="FullBackupContent" />
 
         <exclude
             domain="root"

@@ -40,13 +40,11 @@
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "bucket_id"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
+          ]
+        }
       },
       {
         "tableName": "cache_mobile_image",
@@ -103,8 +101,7 @@
           {
             "fieldPath": "mime",
             "columnName": "mime",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "bucketName",
@@ -121,15 +118,14 @@
           {
             "fieldPath": "localUri",
             "columnName": "local_uri",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
+          "autoGenerate": false,
           "columnNames": [
             "uri"
-          ],
-          "autoGenerate": false
+          ]
         },
         "indices": [
           {
@@ -138,6 +134,7 @@
             "columnNames": [
               "bucket_id"
             ],
+            "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_cache_mobile_image_bucket_id` ON `${TABLE_NAME}` (`bucket_id`)"
           }
         ],
@@ -156,7 +153,6 @@
         ]
       }
     ],
-    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2b643b661dc45ea593ee8ca7bd11f02e')"

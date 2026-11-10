@@ -4,6 +4,12 @@
     <string name="tip">Tip</string>
     <string name="confirm">Confirm</string>
     <string name="retry">Retry</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="intro_grant_permission">Grant permission</string>
+    <string name="intro_open_settings">Open settings</string>
+    <string name="local_empty">No images</string>
+    <string name="mobile_empty">No images on your phone</string>
     <string name="help">Need help?</string>
     <string name="empty">No content</string>
 
@@ -31,6 +37,7 @@
     <string name="image_operation_rotate_right">Rotate right</string>
     <string name="image_operation_hd">Load HD</string>
     <string name="image_operation_delete">Delete</string>
+    <string name="image_operation_title">Image actions</string>
     <string name="image_detail_zoom_in">Zoom in</string>
     <string name="image_detail_zoom_out">Zoom out</string>
 
@@ -66,6 +73,20 @@
     <string name="preference_transfer_disclaimer">Disclaimer</string>
     <string name="preference_transfer_disclaimer_content"># LAN Transfer\n1. Need to be unimpeded between your LAN equipment.\n2. This app is sent in clear and your data may be obtained by others in the same network.</string>
     <string name="preference_about">About</string>
+    <string name="preference_theme">Theme</string>
+    <string name="theme_title">Theme</string>
+    <string name="theme_follow_system">Follow system colors</string>
+    <string name="theme_follow_system_on">Using wallpaper colors</string>
+    <string name="theme_follow_system_off">Using a custom seed color</string>
+    <string name="theme_swatches">Seed color</string>
+    <string name="theme_palette_style">Palette style</string>
+    <string name="theme_color_spec">Color specification</string>
+    <string name="wf_position_left">Move left</string>
+    <string name="wf_position_right">Move right</string>
+    <string name="wf_position_up">Move up</string>
+    <string name="wf_position_down">Move down</string>
+    <string name="wf_size_smaller">Smaller text</string>
+    <string name="wf_size_larger">Larger text</string>
 
     <string name="about_github" translatable="false">GitHub: wear-gallery</string>
     <string name="about_telegram" translatable="false">Telegram: Wear Gallery News</string>
@@ -139,4 +160,21 @@
     <string name="notify_upgrade_title">Upgrading</string>
     <string name="notify_upgrade_text">Wear Gallery is upgrading and migrating data. Don\'t force stop the app.</string>
 
+
+    <string name="back">Back</string>
+    <string name="theme_color_title">Theme color</string>
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="licenses_loading">Loading licenses…</string>
+    <string name="no_license_text">No license text.</string>
+    <string name="palette_tonal_spot" translatable="false">Tonal Spot</string>
+    <string name="palette_neutral" translatable="false">Neutral</string>
+    <string name="palette_vibrant" translatable="false">Vibrant</string>
+    <string name="palette_expressive" translatable="false">Expressive</string>
+    <string name="palette_rainbow" translatable="false">Rainbow</string>
+    <string name="palette_fruit_salad" translatable="false">Fruit Salad</string>
+    <string name="palette_monochrome" translatable="false">Monochrome</string>
+    <string name="palette_fidelity" translatable="false">Fidelity</string>
+    <string name="palette_content" translatable="false">Content</string>
+    <string name="spec_2021">Material 3 (2021)</string>
+    <string name="spec_2025">M3 Expressive (2025)</string>
 </resources>

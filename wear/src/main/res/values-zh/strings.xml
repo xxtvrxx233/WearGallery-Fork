@@ -122,4 +122,47 @@
     <string name="notify_permission_text">请点击并授予必要的权限。</string>
     <string name="notify_upgrade_title">升级中</string>
     <string name="notify_upgrade_text">腕间图库正在升级并迁移数据，请勿强行停止。</string>
+
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="back">返回</string>
+    <string name="image_operation_title">图片操作</string>
+    <string name="intro_grant_permission">授予权限</string>
+    <string name="intro_open_settings">打开设置</string>
+    <string name="local_empty">暂无图片</string>
+    <string name="mobile_empty">手机上没有图片</string>
+    <string name="preference_theme">主题</string>
+    <string name="theme_title">主题</string>
+    <string name="theme_color_title">主题颜色</string>
+    <string name="open_source_licenses">开放源代码许可</string>
+    <string name="licenses_loading">正在加载许可信息…</string>
+    <string name="no_license_text">暂无许可文本。</string>
+    <string name="theme_follow_system">跟随系统</string>
+    <string name="theme_follow_system_on">使用系统调色板</string>
+    <string name="theme_follow_system_off">使用自选颜色</string>
+    <string name="theme_swatches">主题色</string>
+    <string name="theme_palette_style">调色板风格</string>
+    <string name="theme_color_spec">色彩规格</string>
+    <string name="wf_position_left">向左移动</string>
+    <string name="wf_position_right">向右移动</string>
+    <string name="wf_position_up">向上移动</string>
+    <string name="wf_position_down">向下移动</string>
+    <string name="wf_size_smaller">缩小文字</string>
+    <string name="wf_size_larger">放大文字</string>
+    <string name="wf_text_line">换行</string>
+    <string name="wf_text_colon">冒号</string>
+    <string name="wf_text_slash">斜杠</string>
+    <string name="wf_preference_type_entry_value_analog" translatable="false">analog</string>
+    <string name="wf_preference_type_entry_value_digital" translatable="false">digital</string>
+    <string name="palette_tonal_spot" translatable="false">Tonal Spot</string>
+    <string name="palette_neutral" translatable="false">Neutral</string>
+    <string name="palette_vibrant" translatable="false">Vibrant</string>
+    <string name="palette_expressive" translatable="false">Expressive</string>
+    <string name="palette_rainbow" translatable="false">Rainbow</string>
+    <string name="palette_fruit_salad" translatable="false">Fruit Salad</string>
+    <string name="palette_monochrome" translatable="false">Monochrome</string>
+    <string name="palette_fidelity" translatable="false">Fidelity</string>
+    <string name="palette_content" translatable="false">Content</string>
+    <string name="spec_2021">Material 3（2021）</string>
+    <string name="spec_2025">M3 Expressive（2025）</string>
 </resources>

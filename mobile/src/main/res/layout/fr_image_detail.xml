@@ -10,7 +10,7 @@
         android:id="@+id/imageDetailPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior=".ui.imagedetail.ImageDetailContentBehavior"
+        app:layout_behavior="cc.chenhe.weargallery.ui.imagedetail.ImageDetailContentBehavior"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#9575CD" />
@@ -22,7 +22,7 @@
         android:background="@color/black"
         android:clickable="true"
         android:focusable="true"
-        app:layout_behavior=".ui.imagedetail.ImageDetailPanelBehavior">
+        app:layout_behavior="cc.chenhe.weargallery.ui.imagedetail.ImageDetailPanelBehavior">
 
         <TextView
             android:id="@+id/imageDetailPanelTitle"

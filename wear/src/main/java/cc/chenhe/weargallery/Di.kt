@@ -22,7 +22,7 @@ import cc.chenhe.weargallery.db.MainDb
 import cc.chenhe.weargallery.repository.ImageRepository
 import cc.chenhe.weargallery.repository.RemoteImageRepository
 import cc.chenhe.weargallery.ui.explore.AboutViewModel
-import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailFr
+import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailSource
 import cc.chenhe.weargallery.ui.imagedetail.local.LocalImageDetailViewModel
 import cc.chenhe.weargallery.ui.imagedetail.mobile.MobileImageDetailViewModel
 import cc.chenhe.weargallery.ui.local.LocalImagesViewModel
@@ -31,7 +31,6 @@ import cc.chenhe.weargallery.ui.main.SharedViewModel
 import cc.chenhe.weargallery.ui.pick.PickImageViewModel
 import cc.chenhe.weargallery.ui.webserver.WebServerViewModel
 import cc.chenhe.weargallery.uilts.diskcache.MobilePreviewCacheManager
-import cc.chenhe.weargallery.watchface.PreferenceViewModel
 import cc.chenhe.weargallery.watchface.style.TimeTextColorViewModel
 import cc.chenhe.weargallery.watchface.style.TimeTextFormatViewModel
 import com.squareup.moshi.Moshi
@@ -48,12 +47,11 @@ val appModule = module {
     viewModel { (bucketId: Int) ->
         MobileImageDetailViewModel(androidApplication(), bucketId, get(), get())
     }
-    viewModel { (source: LocalImageDetailFr.Source, bucketId: Int) ->
+    viewModel { (source: LocalImageDetailSource, bucketId: Int) ->
         LocalImageDetailViewModel(androidApplication(), source, bucketId)
     }
     viewModel { WebServerViewModel(androidApplication(), get()) }
     viewModel { PickImageViewModel(androidApplication()) }
-    viewModel { PreferenceViewModel(androidApplication()) }
     viewModel { TimeTextFormatViewModel(androidApplication()) }
     viewModel { TimeTextColorViewModel(androidApplication()) }
     viewModel { AboutViewModel(androidApplication(), get()) }

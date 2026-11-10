@@ -228,8 +228,8 @@ class WebServerViewModel(
 
     fun getServerStateColor(serverState: Int): Int {
         return when (serverState) {
-            SERVER_STATE_RUNNING -> ContextCompat.getColor(context, R.color.wv_basic_green)
-            else -> ContextCompat.getColor(context, R.color.wv_basic_red)
+            SERVER_STATE_RUNNING -> ContextCompat.getColor(context, me.chenhe.wearvision.R.color.wv_basic_green)
+            else -> ContextCompat.getColor(context, me.chenhe.wearvision.R.color.wv_basic_red)
         }
     }
 }

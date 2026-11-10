@@ -143,7 +143,7 @@ fun fetchWatchFaceTimeY(context: Context, init: Boolean) =
 fun fetchWatchFaceTimeTextSize(context: Context, init: Boolean) =
     SpFloatLiveData(
         getSp(context), PREFERENCE_WF_TIME_TEXT_SIZE,
-        context.resources.getDimension(R.dimen.wv_text_size_extra_extra_large), init
+        context.resources.getDimension(me.chenhe.wearvision.R.dimen.wv_text_size_extra_extra_large), init
     )
 
 fun setWatchFaceTimePosition(context: Context, x: Float, y: Float) {

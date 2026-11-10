@@ -1,6 +1,10 @@
 import java.io.File
-import java.util.*
+import java.util.Properties
 
+/**
+ * Reads the release signing config from `keystore.properties` at the project root (the same layout
+ * as the Compass project), falling back to environment variables used by CI.
+ */
 class Signing(private val rootDir: File) {
 
     data class Config(
@@ -11,29 +15,23 @@ class Signing(private val rootDir: File) {
     )
 
     fun readConfig(): Config? {
-        val keystoreDir = File(rootDir, "keystore")
-        if (!keystoreDir.isDirectory) {
-            return null // key dir does not exist
-        }
-        val keyFile = File(keystoreDir, "release.jks")
-        if (!keyFile.isFile) {
-            return null // key file does not exist
-        }
+        val propFile = File(rootDir, "keystore.properties")
+        if (!propFile.isFile) return null
 
-        // read config file
         val prop = Properties()
-        val propFile = File(keystoreDir, "config.properties")
-        if (propFile.isFile) {
-            propFile.inputStream().use { prop.load(it) }
-        }
+        propFile.inputStream().use { prop.load(it) }
 
-        val storePwd = System.getenv("WG_SIGNING_STORE_PWD") ?: prop.getProperty("storePwd", null)
-        val keyAlias = System.getenv("WG_SIGNING_KEY_ALIAS") ?: prop.getProperty("keyAlias", null)
-        val keyPwd = System.getenv("WG_SIGNING_KEY_PWD") ?: prop.getProperty("keyPwd", null)
-        if (storePwd.isNullOrEmpty() || keyAlias.isNullOrEmpty() || keyPwd.isNullOrEmpty()) {
-            return null
-        }
+        fun value(propKey: String, legacyKey: String, envKey: String): String? =
+            System.getenv(envKey) ?: prop.getProperty(propKey) ?: prop.getProperty(legacyKey)
 
-        return Config(keyFile, storePwd, keyAlias, keyPwd)
+        val storePath = prop.getProperty("storeFile") ?: return null
+        val storePwd = value("storePassword", "storePwd", "WG_SIGNING_STORE_PWD") ?: return null
+        val alias = value("keyAlias", "keyAlias", "WG_SIGNING_KEY_ALIAS") ?: return null
+        val keyPwd = value("keyPassword", "keyPwd", "WG_SIGNING_KEY_PWD") ?: return null
+
+        val storeFile = File(storePath).let { if (it.isAbsolute) it else File(rootDir, storePath) }
+        if (!storeFile.isFile) return null
+
+        return Config(storeFile, storePwd, alias, keyPwd)
     }
 }

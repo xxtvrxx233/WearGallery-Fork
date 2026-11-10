@@ -21,19 +21,11 @@ import android.app.Application
 import android.os.Build
 import android.util.Log
 import cc.chenhe.weargallery.common.log.MmapLogTree
-import cc.chenhe.weargallery.common.util.getLogDir
-import cc.chenhe.weargallery.common.util.xlogAppenderCloseSafely
 import coil.ComponentRegistry
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.AbstractCrashesListener
-import com.microsoft.appcenter.crashes.Crashes
-import com.microsoft.appcenter.crashes.ingestion.models.ErrorAttachmentLog
-import com.microsoft.appcenter.crashes.model.ErrorReport
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -43,11 +35,13 @@ import timber.log.Timber
 class MyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
+        cc.chenhe.weargallery.ui.compose.WearThemePreferences.init(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+        } else {
+            Timber.plant(MmapLogTree(this, Log.DEBUG))
         }
-        startAppCenterIfNecessary()
 
         startKoin {
             androidLogger(if (BuildConfig.DEBUG) Level.ERROR else Level.NONE)
@@ -67,31 +61,4 @@ class MyApplication : Application(), ImageLoaderFactory {
         })
         .build()
 
-    private fun startAppCenterIfNecessary() {
-        if (BuildConfig.APPCENTER_SECRET.isNotEmpty() && !BuildConfig.DEBUG && !AppCenter.isConfigured()) {
-            Timber.plant(MmapLogTree(this, Log.DEBUG))
-            val crashesListener = object : AbstractCrashesListener() {
-                override fun getErrorAttachments(report: ErrorReport?): MutableIterable<ErrorAttachmentLog>? {
-                    // worker thread
-                    xlogAppenderCloseSafely()
-                    val logs = getLogDir(this@MyApplication).listFiles()
-                    if (logs.isNullOrEmpty())
-                        return null
-                    logs.sortByDescending { it.lastModified() }
-                    return mutableListOf(
-                        ErrorAttachmentLog.attachmentWithBinary(
-                            logs.first().readBytes(),
-                            logs.first().name,
-                            "text/plain"
-                        )
-                    )
-                }
-            }
-            Crashes.setListener(crashesListener)
-            AppCenter.start(
-                this, BuildConfig.APPCENTER_SECRET,
-                Analytics::class.java, Crashes::class.java
-            )
-        }
-    }
 }

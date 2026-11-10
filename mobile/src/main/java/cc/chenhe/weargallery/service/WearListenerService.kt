@@ -20,12 +20,16 @@ package cc.chenhe.weargallery.service
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.Manifest
+import android.os.Build
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.lifecycleScope
 import cc.chenhe.weargallery.R
@@ -93,6 +97,12 @@ class WearListenerService : WMListenerService() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .build()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            return false
+        }
         NotificationManagerCompat.from(this).notify(NOTIFY_ID_PERMISSION, notify)
         return false
     }

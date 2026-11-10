@@ -14,7 +14,7 @@
         android:id="@+id/imagesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior=".ui.common.CollapseContentScrollBehavior"
+        app:layout_behavior="cc.chenhe.weargallery.ui.common.CollapseContentScrollBehavior"
         tools:listitem="@layout/rv_item_images_img" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

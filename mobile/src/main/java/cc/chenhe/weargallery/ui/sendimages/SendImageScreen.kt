@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -43,23 +44,21 @@ import cc.chenhe.weargallery.common.bean.Image
 import cc.chenhe.weargallery.common.util.getActivity
 import cc.chenhe.weargallery.common.util.isAlwaysDenied
 import cc.chenhe.weargallery.ui.common.PermissionRequestCard
+import cc.chenhe.weargallery.ui.common.shimmerPlaceholder
 import cc.chenhe.weargallery.ui.theme.ContentAlpha
 import cc.chenhe.weargallery.ui.theme.WearGalleryTheme
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
 import coil.transition.CrossfadeTransition
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SendImageScreen(
     napUp: () -> Unit,
     intent: Intent,
-    model: SendImagesViewModel = getViewModel { parametersOf(intent) },
+    model: SendImagesViewModel = koinViewModel { parametersOf(intent) },
     oneColumnLayout: Boolean,
 ) {
     val state by model.uiState
@@ -391,7 +390,7 @@ private fun TargetDeviceOption(
         AlertDialog(onDismissRequest = { showSelectDeviceDialog = false },
             title = { Text(stringResource(id = R.string.send_images_device)) },
             text = {
-                CompositionLocalProvider(LocalIndication provides rememberRipple()) {
+                CompositionLocalProvider(LocalIndication provides ripple()) {
                     LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         if (devices.isEmpty()) {
                             item(contentType = "header") {
@@ -486,7 +485,7 @@ private fun PropertyItemFrame(
     onClick: (() -> Unit)? = null,
     value: @Composable ColumnScope.() -> Unit = {},
 ) {
-    CompositionLocalProvider(LocalIndication provides rememberRipple()) {
+    CompositionLocalProvider(LocalIndication provides ripple()) {
         Box(modifier = modifier.clip(MaterialTheme.shapes.medium).let {
             if (onClick != null) it.clickable(onClick = onClick) else it
         }) {
@@ -534,9 +533,7 @@ private fun ImageList(images: List<Image>, modifier: Modifier = Modifier) {
                     },
                     modifier = Modifier
                         .fillMaxSize()
-                        .placeholder(
-                            visible = showPlaceholder, highlight = PlaceholderHighlight.shimmer()
-                        ),
+                        .shimmerPlaceholder(showPlaceholder),
                 )
             }
         }

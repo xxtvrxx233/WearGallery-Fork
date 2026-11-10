@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.repo.PreferenceRepo
@@ -77,7 +78,9 @@ class ForegroundService : Service() {
         }
         if (disableReceiver == null) {
             disableReceiver = DisableReceiver().also {
-                registerReceiver(it, IntentFilter(ACTION_DISABLE))
+                ContextCompat.registerReceiver(
+                    this, it, IntentFilter(ACTION_DISABLE), ContextCompat.RECEIVER_NOT_EXPORTED
+                )
             }
         }
         setForeground()

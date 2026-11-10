@@ -19,7 +19,6 @@ package cc.chenhe.weargallery.bean
 
 import android.net.Uri
 import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
 import cc.chenhe.weargallery.common.bean.IImage
 import cc.chenhe.weargallery.common.bean.Image
 import com.squareup.moshi.JsonClass
@@ -36,7 +35,7 @@ import com.squareup.moshi.JsonClass
         entity = RemoteImageFolder::class,
         parentColumns = arrayOf("bucket_id"),
         childColumns = arrayOf("bucket_id"),
-        onDelete = CASCADE
+        onDelete = ForeignKey.CASCADE
     )]
 )
 @JsonClass(generateAdapter = true)

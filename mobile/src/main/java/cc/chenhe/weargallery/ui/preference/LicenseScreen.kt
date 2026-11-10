@@ -9,6 +9,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.*
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import cc.chenhe.weargallery.ui.components.ActionRow
+import cc.chenhe.weargallery.ui.components.AppBackButton
+import cc.chenhe.weargallery.ui.components.SegmentedColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -18,10 +25,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cc.chenhe.weargallery.ui.theme.ContentAlpha
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LicenseScreen(navUp: () -> Unit, model: LicenseViewModel = getViewModel()) {
+fun LicenseScreen(navUp: () -> Unit, model: LicenseViewModel = koinViewModel()) {
     val uiState by model.uiState
     LicenseScreenFrame(navUp, uiState)
 }
@@ -29,29 +36,36 @@ fun LicenseScreen(navUp: () -> Unit, model: LicenseViewModel = getViewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LicenseScreenFrame(navUp: () -> Unit, uiState: LicenseUiState) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = navUp) {
-                        Icon(
-                            Icons.Rounded.ArrowBack,
-                            stringResource(id = cc.chenhe.weargallery.R.string.navup),
-                        )
-                    }
-                },
+            LargeTopAppBar(
+                navigationIcon = { AppBackButton(navUp) },
                 title = { Text(stringResource(id = cc.chenhe.weargallery.R.string.about_licence)) },
+                scrollBehavior = scrollBehavior,
             )
         }
     ) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                items(uiState.licenses.size) { index ->
-                    LicenseItem(uiState.licenses[index])
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth().padding(paddingValues),
+        ) {
+            item {
+                SegmentedColumn(title = stringResource(id = cc.chenhe.weargallery.R.string.about_licence)) {
+                    uiState.licenses.forEach { license ->
+                        item(key = license.name) { shape ->
+                            val ctx = LocalContext.current
+                            ActionRow(
+                                title = license.name,
+                                summary = "${license.author} · ${license.type}",
+                                shape = shape,
+                                onClick = { ctx.openInBrowser(license.url) },
+                            )
+                        }
+                    }
                 }
             }
+            item { Spacer(Modifier.height(24.dp)) }
         }
     }
 }

@@ -27,6 +27,7 @@ import android.os.Bundle
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -37,6 +38,8 @@ import cc.chenhe.weargallery.common.util.xlogAppenderFlushSafely
 import cc.chenhe.weargallery.db.RemoteImageDao
 import cc.chenhe.weargallery.ui.IntroduceAty
 import cc.chenhe.weargallery.ui.UpgradingAty
+import cc.chenhe.weargallery.ui.compose.WearGalleryApp
+import cc.chenhe.weargallery.ui.compose.WearGalleryTheme
 import cc.chenhe.weargallery.uilts.NOTIFY_ID_PERMISSION
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -112,7 +115,11 @@ class MainAty : AppCompatActivity() {
 
     // 4 init
     private fun init() {
-        setContentView(R.layout.aty_main)
+        setContent {
+            WearGalleryTheme {
+                WearGalleryApp()
+            }
+        }
 
         sharedViewModel.deleteRequestEvent.observe(this) { pending ->
             if (pending != null) {
@@ -133,14 +140,7 @@ class MainAty : AppCompatActivity() {
      * @return Whether has permissions.
      */
     private fun hasPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED && (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q ||
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) == PackageManager.PERMISSION_GRANTED)
+        return cc.chenhe.weargallery.uilts.checkStoragePermissions(this)
     }
 
 }

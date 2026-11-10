@@ -166,24 +166,17 @@ private fun getProperty(key: String, defaultValue: String): String {
 }
 
 fun checkStoragePermissions(context: Context): Boolean {
-    return ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    ) == PackageManager.PERMISSION_GRANTED
-}
+    fun granted(permission: String) =
+        ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
 
-@SuppressLint("InflateParams")
-fun AlertDialog.addQrCode(content: String) {
-    val view = LayoutInflater.from(context).inflate(R.layout.dialog_image_view, null, false).apply {
-        findViewById<ImageView>(R.id.qrImage).setImageBitmap(
-            ZxingUtils.generateBitmap(
-                content,
-                200,
-                200
-            )
-        )
+    return when {
+        Build.VERSION.SDK_INT >= 34 ->
+            granted(Manifest.permission.READ_MEDIA_IMAGES) ||
+                granted(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
+
+        Build.VERSION.SDK_INT >= 33 -> granted(Manifest.permission.READ_MEDIA_IMAGES)
+        else -> granted(Manifest.permission.READ_EXTERNAL_STORAGE)
     }
-    setView(view)
 }
 
 fun registerImportantPrecessingNotificationChannel(context: Context) {

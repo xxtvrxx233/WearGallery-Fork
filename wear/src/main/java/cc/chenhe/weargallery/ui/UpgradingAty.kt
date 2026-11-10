@@ -25,7 +25,22 @@ import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.compose.setContent
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.CircularProgressIndicator
+import androidx.wear.compose.material3.Text
+import androidx.wear.compose.material3.TimeText
+import cc.chenhe.weargallery.ui.compose.WearGalleryTheme
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.getVersionCode
@@ -43,7 +58,7 @@ import timber.log.Timber
  * This activity starts [UpgradeService] in [onCreate] method automatically and finish once a local broadcast with
  * action [ACTION_APPLICATION_UPGRADE_COMPLETE] is received.
  */
-class UpgradingAty : AppCompatActivity() {
+class UpgradingAty : ComponentActivity() {
 
     companion object {
         private const val TAG = "UpgradingAty"
@@ -94,7 +109,11 @@ class UpgradingAty : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setResult(Activity.RESULT_CANCELED)
-        setContentView(R.layout.aty_upgrading)
+        setContent {
+            WearGalleryTheme {
+                AppScaffold(timeText = { TimeText() }) { UpgradingScreen() }
+            }
+        }
 
         // register local receiver
         receiver = object : BroadcastReceiver() {
@@ -128,6 +147,21 @@ class UpgradingAty : AppCompatActivity() {
     private fun onUpgradeComplete() {
         setResult(Activity.RESULT_OK)
         finish()
+    }
+
+    @Composable
+    private fun UpgradingScreen() {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CircularProgressIndicator()
+            Text(
+                text = stringResource(R.string.upgrade_message),
+                modifier = Modifier.padding(top = 12.dp),
+            )
+        }
     }
 
     override fun onDestroy() {

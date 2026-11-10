@@ -13,7 +13,7 @@
         android:id="@android:id/list_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior=".ui.common.CollapseContentScrollBehavior"
+        app:layout_behavior="cc.chenhe.weargallery.ui.common.CollapseContentScrollBehavior"
         tools:ignore="NewApi" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

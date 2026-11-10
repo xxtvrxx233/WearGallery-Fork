@@ -40,7 +40,7 @@ import cc.chenhe.weargallery.utils.getTitleTextView
 import cc.chenhe.weargallery.utils.requireCompatAty
 import cc.chenhe.weargallery.utils.resetStatusBarTextColor
 import cc.chenhe.weargallery.utils.setupToolbar
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
@@ -58,7 +58,7 @@ class ImageDetailFr : Fragment() {
     private lateinit var binding: FrImageDetailBinding
     private lateinit var panelBehavior: ImageDetailPanelBehavior
     private val args: ImageDetailFrArgs by navArgs()
-    private val sharedModel: SharedViewModel by sharedViewModel()
+    private val sharedModel: SharedViewModel by activityViewModel()
     private val modle: ImageDetailViewModel by viewModel { parametersOf(args.bucketId) }
 
     private lateinit var imageGestureDetector: GestureDetector

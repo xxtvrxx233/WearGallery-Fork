@@ -20,43 +20,32 @@ package cc.chenhe.weargallery.ui.pick
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentContainerView
-import cc.chenhe.weargallery.common.bean.Image
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.TimeText
+import cc.chenhe.weargallery.ui.compose.WearGalleryTheme
+import cc.chenhe.weargallery.ui.compose.screens.PickImageScreen
 
 /**
  * An activity that lets users choose local picture. The default result is [Activity.RESULT_CANCELED]. If the user
  * selects a picture then the result is [Activity.RESULT_OK] and the uri of the selected picture will be saved in the
  * result intent, you should use [Intent.getData] to get it.
  */
-class PickImageAty : AppCompatActivity() {
-
-    private lateinit var fragmentContainerView: FragmentContainerView
+class PickImageAty : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setResult(Activity.RESULT_CANCELED)
-        fragmentContainerView = FragmentContainerView(this).apply {
-            id = android.R.id.widget_frame
-        }
-        val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        setContentView(fragmentContainerView, lp)
-
-        val fragment = PickImageFr().also {
-            it.onPickListener = object : PickImageFr.OnPickListener {
-                override fun onPick(image: Image) {
-                    val r = Intent().apply {
-                        data = image.uri
-                    }
-                    setResult(Activity.RESULT_OK, r)
-                    finish()
+        setContent {
+            WearGalleryTheme {
+                AppScaffold(timeText = { TimeText() }) {
+                    PickImageScreen(onPick = { image ->
+                        setResult(Activity.RESULT_OK, Intent().setData(image.uri))
+                        finish()
+                    })
                 }
             }
         }
-
-        supportFragmentManager.beginTransaction()
-                .add(fragmentContainerView.id, fragment)
-                .commit()
     }
 }

@@ -13,48 +13,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew test && ./gradlew copyReports
+        run: ./gradlew test
 
       - name: Upload reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: Test reports
-          path: "build/uni-outs/report"
+          path: |
+            "*/build/reports"
           if-no-files-found: warn
 
   android-lint:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew lint && ./gradlew copyReports
+        run: ./gradlew lint
 
       - name: Upload reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: Lint reports
-          path: "build/uni-outs/report"
+          path: |
+            "*/build/reports"
           if-no-files-found: warn
 
   web-build:
@@ -63,18 +67,26 @@ jobs:
       WEB_DIR: "lan-web"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Check file existence
         id: check_files
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: ${{ env.WEB_DIR }}
 
-      - name: lint
+      - name: setup Node.js
+        if: steps.check_files.outputs.files_exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: lan-web/package-lock.json
+
+      - name: build
         if: steps.check_files.outputs.files_exists == 'true'
         run: |
           cd $WEB_DIR
-          npm install
+          npm ci
           npm run build
 
   web-lint:
@@ -83,16 +95,24 @@ jobs:
       WEB_DIR: "lan-web"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Check file existence
         id: check_files
-        uses: andstor/file-existence-action@v2
+        uses: andstor/file-existence-action@v3
         with:
           files: ${{ env.WEB_DIR }}
+
+      - name: setup Node.js
+        if: steps.check_files.outputs.files_exists == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: lan-web/package-lock.json
 
       - name: lint
         if: steps.check_files.outputs.files_exists == 'true'
         run: |
           cd $WEB_DIR
-          npm install
+          npm ci
           ./node_modules/.bin/eslint --ext .js,.jsx,.ts,.tsx,.vue --max-warnings=0 .

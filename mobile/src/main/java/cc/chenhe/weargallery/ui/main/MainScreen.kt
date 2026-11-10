@@ -35,7 +35,7 @@ import cc.chenhe.weargallery.R
 import cc.chenhe.weargallery.common.util.*
 import cc.chenhe.weargallery.ui.theme.WearGalleryTheme
 import cc.chenhe.weargallery.utils.runIf
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
@@ -43,7 +43,7 @@ fun MainScreen(
     navToLegacy: () -> Unit,
     oneColumnLayout: Boolean,
     widthLooseLayout: Boolean,
-    model: MainScreenViewModel = getViewModel()
+    model: MainScreenViewModel = koinViewModel()
 ) {
     val uiState by model.uiState
     val lifecycleOwner = LocalLifecycleOwner.current

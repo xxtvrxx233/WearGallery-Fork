@@ -1,40 +1,33 @@
-import com.android.build.api.variant.AndroidComponentsExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
-import java.io.File
 
-private const val TARGET_APK_FOLDER = "uni-outs/apk/"
-private const val TARGET_REPORT_FOLDER = "uni-outs/report/"
-private const val TARGET_MAPPING_FOLDER = "uni-outs/mapping/"
+private const val TARGET_APK_FOLDER = "uni-outs/apk"
+private const val TARGET_MAPPING_FOLDER = "uni-outs/mapping"
 
+/**
+ * Copies build outputs (APK / mapping) into the root project build directory
+ * so that CI can pick them up from a single place.
+ */
 class CopyOutsPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         val ext = project.extensions.create("copyOuts", CopyOutsExtension::class.java)
-        val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
+        val rootBuildDir = project.rootProject.layout.buildDirectory
 
-        androidComponents.onVariants(
-            androidComponents.selector().withBuildType("release")
-        ) { variant ->
-            val apkDir = variant.artifacts.get(com.android.build.api.artifact.SingleArtifact.APK)
-
-            if (ext.copyApk) {
-                project.tasks.register("copyApk", Copy::class.java) {
-                    from(apkDir)
-                    into(File(project.rootProject.buildDir, TARGET_APK_FOLDER))
-                    include("*.apk")
-                }
+        project.plugins.withId("com.android.application") {
+            val copyApk = project.tasks.register("copyApk", Copy::class.java) {
+                dependsOn("assembleRelease")
+                onlyIf { ext.copyApk }
+                from(project.layout.buildDirectory.dir("outputs/apk/release"))
+                into(rootBuildDir.dir(TARGET_APK_FOLDER))
+                include("*.apk")
             }
-
             project.tasks.register("copyMapping", Copy::class.java) {
-                from(File(project.buildDir, "outputs/mapping/${variant.buildType}/mapping.txt"))
-                into(File(project.rootProject.buildDir, TARGET_MAPPING_FOLDER + project.name))
+                dependsOn(copyApk)
+                onlyIf { ext.copyApk }
+                from(project.layout.buildDirectory.file("outputs/mapping/release/mapping.txt"))
+                into(rootBuildDir.dir("$TARGET_MAPPING_FOLDER/${project.name}"))
                 include("mapping.txt")
-            }
-
-            project.tasks.register("copyReports", Copy::class.java) {
-                from(File(project.buildDir, "reports"))
-                into(File(project.rootProject.buildDir, TARGET_REPORT_FOLDER + project.name))
             }
         }
 

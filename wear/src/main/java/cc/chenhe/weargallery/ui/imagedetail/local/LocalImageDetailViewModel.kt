@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.Flow
 
 class LocalImageDetailViewModel(
     application: Application,
-    source: LocalImageDetailFr.Source,
+    source: LocalImageDetailSource,
     bucketId: Int,
 ) : ImageDetailBaseViewModel<Image>(application) {
 
@@ -55,11 +55,11 @@ class LocalImageDetailViewModel(
             config = PagingConfig(pageSize = Int.MAX_VALUE, initialLoadSize = Int.MAX_VALUE)
         ) {
             when (source) {
-                LocalImageDetailFr.Source.IMAGES -> {
+                LocalImageDetailSource.IMAGES -> {
                     ImageSource().also { invalidateCallback = it }
                 }
-                LocalImageDetailFr.Source.FOLDER -> {
-                    if (bucketId == LocalImageDetailFr.BUCKET_ID_NA) {
+                LocalImageDetailSource.FOLDER -> {
+                    if (bucketId == BUCKET_ID_NA) {
                         throw IllegalArgumentException("Unexpected bucket id, do you miss the parameters?")
                     }
                     FolderSource(bucketId).also { invalidateCallback = it }

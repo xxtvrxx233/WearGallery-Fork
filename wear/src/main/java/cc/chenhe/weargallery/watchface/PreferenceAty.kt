@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2020 Chenhe
+ * Copyright (C) 2026 xxtvrxx233
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,13 +18,39 @@
 package cc.chenhe.weargallery.watchface
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import cc.chenhe.weargallery.R
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.wear.compose.material3.AppScaffold
+import androidx.wear.compose.material3.TimeText
+import cc.chenhe.weargallery.ui.compose.WearGalleryTheme
+import cc.chenhe.weargallery.ui.compose.WearRoute
+import cc.chenhe.weargallery.ui.compose.screens.WatchFaceSettingsScreen
+import cc.chenhe.weargallery.ui.compose.screens.WatchFaceTextScreen
 
-class PreferenceAty : AppCompatActivity() {
-
+/** Watch face configuration activity, opened from the system watch face picker or the app. */
+class PreferenceAty : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.wf_aty_preference)
+        setContent {
+            WearGalleryTheme {
+                AppScaffold(timeText = { TimeText() }) {
+                    var textKind by rememberSaveable { mutableStateOf<String?>(null) }
+                    BackHandler(enabled = textKind != null) { textKind = null }
+                    when (val kind = textKind) {
+                        null -> WatchFaceSettingsScreen(
+                            onNavigate = { route ->
+                                if (route is WearRoute.WatchFaceText) textKind = route.kind
+                            }
+                        )
+                        else -> WatchFaceTextScreen(kind) { textKind = null }
+                    }
+                }
+            }
+        }
     }
 }

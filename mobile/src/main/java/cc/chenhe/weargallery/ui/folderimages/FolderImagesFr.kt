@@ -33,7 +33,7 @@ import cc.chenhe.weargallery.databinding.FrFolderImagesBinding
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.utils.requireCompatAty
 import cc.chenhe.weargallery.utils.setupToolbar
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -41,7 +41,7 @@ class FolderImagesFr : Fragment() {
 
     private lateinit var binding: FrFolderImagesBinding
 
-    private val sharedModel by sharedViewModel<SharedViewModel>()
+    private val sharedModel by activityViewModel<SharedViewModel>()
     private val args: FolderImagesFrArgs by navArgs()
     private val model by viewModel<FolderImagesViewModel> { parametersOf(args.bucketId) }
 

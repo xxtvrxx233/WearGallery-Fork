@@ -12,6 +12,7 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- Required for complications to receive complication data and open the provider chooser. -->
@@ -69,12 +70,17 @@
 
         <service
             android:name=".service.SendPicturesService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
-        <service android:name=".service.AppUpgradeService" />
+        <service
+            android:name=".service.AppUpgradeService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
         <service
             android:name=".service.ForegroundService"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <receiver
             android:name=".AppUpgradeReceiver"
@@ -86,7 +92,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="cc.chenhe.weargallery.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

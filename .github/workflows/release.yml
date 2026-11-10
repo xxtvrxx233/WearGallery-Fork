@@ -11,48 +11,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew test && ./gradlew copyReports
+        run: ./gradlew test
 
       - name: Upload reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: Test reports
-          path: "build/uni-outs/report"
+          path: |
+            "*/build/reports"
           if-no-files-found: warn
 
   lint:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
-        run: ./gradlew lint && ./gradlew copyReports
+        run: ./gradlew lint
 
       - name: Upload reports
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: Lint reports
-          path: "build/uni-outs/report"
+          path: |
+            "*/build/reports"
           if-no-files-found: warn
 
   release:
@@ -64,12 +68,13 @@ jobs:
       WG_SIGNING_KEY_PWD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v2
-      - name: set up JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
 
       - name: base64-to-file
         uses: narcodico/base64-to-path@v1
@@ -82,12 +87,12 @@ jobs:
         run: ./gradlew assembleRelease && ./gradlew copyApk && ./gradlew copyMapping
 
       - name: Upload Apks
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: apks
           path: "build/uni-outs/apk"
       - name: Upload Mappings
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mappings
           path: "build/uni-outs/mapping"

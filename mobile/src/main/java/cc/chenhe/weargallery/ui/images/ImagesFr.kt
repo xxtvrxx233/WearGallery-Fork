@@ -38,14 +38,14 @@ import cc.chenhe.weargallery.ui.imagedetail.ImageDetailFr
 import cc.chenhe.weargallery.ui.legacy.PagerFrDirections
 import cc.chenhe.weargallery.ui.legacy.SharedViewModel
 import cc.chenhe.weargallery.ui.sendimages.SendImagesAty
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 class ImagesFr : Fragment(), Toolbar.OnMenuItemClickListener {
 
-    private val sharedModel: SharedViewModel by sharedViewModel()
+    private val sharedModel: SharedViewModel by activityViewModel()
     private val model: ImagesViewModel by viewModel()
 
     private lateinit var binding: FrImagesBinding

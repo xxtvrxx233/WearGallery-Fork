@@ -21,10 +21,13 @@ import android.app.Notification
 import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.Intent
 import android.os.*
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
@@ -450,6 +453,12 @@ class SendPicturesService : LifecycleService() {
     }
 
     private fun notifySendFinish(sentCount: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         val n = NotificationCompat.Builder(this, CHANNEL_ID_SEND_RESULT)
             .setSmallIcon(R.drawable.ic_notify_done)
             .setContentTitle(getString(R.string.notify_send_images_success_title))
@@ -461,6 +470,12 @@ class SendPicturesService : LifecycleService() {
     }
 
     private fun notifySendFailed(@StringRes message: Int, sentCount: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         val text =
             getString(R.string.notify_send_images_failed_content, getString(message), sentCount)
 

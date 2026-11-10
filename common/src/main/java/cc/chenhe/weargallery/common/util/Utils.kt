@@ -60,7 +60,7 @@ fun getVersionCode(context: Context): Long {
 
 fun getVersionName(context: Context): String {
     return try {
-        context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""
     } catch (e: Exception) {
         e.printStackTrace()
         ""

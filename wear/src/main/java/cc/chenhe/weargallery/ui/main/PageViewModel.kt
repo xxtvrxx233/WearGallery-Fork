@@ -18,12 +18,8 @@
 package cc.chenhe.weargallery.ui.main
 
 import android.app.Application
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MediatorLiveData
-import cc.chenhe.weargallery.ui.explore.ExploreFr
-import cc.chenhe.weargallery.ui.local.LocalImagesFr
-import cc.chenhe.weargallery.ui.mobile.MobileImagesFr
 import cc.chenhe.weargallery.uilts.fetchQueryShowPhoneImages
 import cc.chenhe.weargallery.uilts.fetchShowPhoneImages
 
@@ -62,15 +58,5 @@ class PageViewModel(application: Application) : AndroidViewModel(application) {
             listOf(Item.Local, Item.Phone, Item.Explore)
         else
             listOf(Item.Local, Item.Explore)
-    }
-
-    fun createFragment(position: Int): Fragment? {
-        return when (items.value?.getOrNull(position)) {
-            Item.Local -> LocalImagesFr()
-            Item.Phone -> MobileImagesFr()
-            Item.Explore -> ExploreFr()
-            Item.WhetherShowPhone -> WhetherShoePhoneImageFr()
-            null -> null
-        }
     }
 }

@@ -10,6 +10,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material3.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import cc.chenhe.weargallery.ui.components.AppBackButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -51,18 +58,14 @@ private fun AboutScreenFrame(
     navToLicenses: () -> Unit,
     oneColumnLayout: Boolean,
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = navUp) {
-                        Icon(
-                            Icons.Rounded.ArrowBack,
-                            contentDescription = stringResource(id = R.string.navup)
-                        )
-                    }
-                },
-                title = {}
+            LargeTopAppBar(
+                navigationIcon = { AppBackButton(navUp) },
+                title = { Text(stringResource(R.string.pref_about)) },
+                scrollBehavior = scrollBehavior,
             )
         }
     ) { paddingValues ->
